@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>محاسبه کرایه تانکر سوخت</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--tx:#1b1f24;--mut:#6b7280;--bd:#d9dde3;--ac:#0f6e56;--ac2:#e1f5ee;--warn:#b45309;--warn2:#fef3c7;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111418;--card:#1b2026;--tx:#e8eaed;--mut:#9aa3ad;--bd:#343b44;--ac:#4cc9a0;--ac2:#12332a;--warn:#fbbf24;--warn2:#3a2c0a}}
+:root[data-theme="dark"]{--bg:#111418;--card:#1b2026;--tx:#e8eaed;--mut:#9aa3ad;--bd:#343b44;--ac:#4cc9a0;--ac2:#12332a;--warn:#fbbf24;--warn2:#3a2c0a}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Vazirmatn,Tahoma,sans-serif;padding:16px;line-height:1.7}
+.wrap{max-width:520px;margin:0 auto}
+h1{font-size:20px;margin:8px 0 16px;display:flex;gap:8px;align-items:center}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:14px}
+label{display:block;font-size:14px;color:var(--mut);margin:12px 0 4px}
+label:first-child{margin-top:0}
+.f{display:flex;align-items:center;border:1px solid var(--bd);border-radius:10px;background:var(--bg);overflow:hidden}
+.f:focus-within{border-color:var(--ac)}
+.f input,.f select{flex:1;min-width:0;border:0;background:transparent;color:var(--tx);font:inherit;font-size:18px;padding:10px 12px;outline:0;direction:ltr;text-align:right}
+.f select{direction:rtl;font-size:15px}
+.f span{padding:0 12px;color:var(--mut);font-size:13px;white-space:nowrap}
+.row{display:flex;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px dashed var(--bd);font-size:15px}
+.row:last-child{border-bottom:0}
+.row b{font-size:16px;direction:ltr;unicode-bidi:embed}
+.row small{color:var(--mut)}
+.total{background:var(--ac2);border-radius:10px;padding:12px;margin:6px 0;border:0;color:var(--ac)}
+.total b{font-size:20px}
+.rem{background:var(--warn2);color:var(--warn);border-radius:10px;padding:12px;border:0;margin-top:6px}
+.rem b{font-size:20px}
+button{font:inherit;width:100%;padding:11px;border-radius:10px;border:1px solid var(--bd);background:transparent;color:var(--mut);cursor:pointer}
+.tabs{display:flex;gap:6px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:4px;margin-bottom:14px}
+.tabs button{flex:1;width:auto;border:0;padding:9px 6px;font-weight:600;font-size:14px}
+.tabs button.on{background:var(--ac);color:#fff}
+.hint{font-size:13px;color:var(--mut);margin:0 0 4px}
+.acts{display:flex;gap:6px;margin-bottom:14px}.acts button{flex:1;width:auto;padding:10px 4px;font-size:13px;color:var(--tx)}
+.wd{font-size:13px;color:var(--mut);padding:6px 0 0}.pm{display:none;font-size:13px;margin-top:8px}
+.hi{padding:10px 0;border-bottom:1px dashed var(--bd)}.hi:last-child{border:0}.hh{font-weight:600;font-size:14px}.hb{font-size:13px;color:var(--mut);margin:2px 0 6px}.hx{display:flex;gap:6px}.hx button{width:auto;padding:3px 16px;font-size:13px}
+@media print{.tabs,#p1>.card:first-of-type,.acts,#reset,#p2,#p3{display:none!important}body{background:#fff;color:#000}.card{border:0;background:#fff;color:#000}.pm{display:block}.row,.wd,.row small{color:#000!important;background:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>⛽ محاسبه کرایه تانکر سوخت</h1>
+<div class="tabs">
+<button type="button" id="t1" class="on">کرایه بار</button>
+<button type="button" id="t2">نرخ مسیر جدید</button>
+<button type="button" id="t3">سوابق</button>
+</div>
+<div id="p1">
+
+<div class="card">
+<label for="meta">توضیحات (مبدأ، مقصد، راننده)</label>
+<div class="f"><input id="meta" placeholder="اختیاری" style="direction:rtl;font-size:15px"></div>
+
+<label for="ton" style="margin-top:12px">وزن بارگیری</label>
+<div class="f"><input id="ton" inputmode="decimal" placeholder="0"><span>کیلوگرم</span></div>
+
+<label for="rate">نرخ</label>
+<div class="f"><input id="rate" inputmode="decimal" placeholder="0"><span>تومان</span></div>
+
+<label for="unit">نرخ بر اساس</label>
+<div class="f"><select id="unit">
+<option value="kg">هر کیلوگرم</option>
+<option value="ton">هر تن</option>
+</select></div>
+
+<label for="tip">انعام</label>
+<div class="f"><input id="tip" inputmode="decimal" placeholder="0"><span>تومان</span></div>
+
+<label for="tr">هزینه ترانشیپ</label>
+<div class="f"><input id="tr" inputmode="decimal" placeholder="0"><span>تومان</span></div>
+
+<label for="pct">درصد پرداختی</label>
+<div class="f"><input id="pct" inputmode="decimal" placeholder="مثلاً 80"><span>٪</span></div>
+
+<label for="base">درصد روی چه مبلغی حساب شود؟</label>
+<div class="f"><select id="base">
+<option value="total">کل (کرایه + انعام + ترانشیپ)</option>
+<option value="freight">فقط کرایه</option>
+</select></div>
+</div>
+
+<div class="card">
+<div class="row"><span>کرایه <small>(وزن × نرخ)</small></span><b id="freight">0</b></div>
+<div class="row"><span>انعام</span><b id="tipo">0</b></div>
+<div class="row"><span>ترانشیپ</span><b id="tro">0</b></div>
+<div class="row total"><span>جمع کل <small>(کرایه + انعام + ترانشیپ)</small></span><b id="total">0</b></div>
+<div class="row"><span>مبلغ پرداختی <small id="pl"></small></span><b id="paid">0</b></div>
+<div class="row rem"><span>باقی‌مانده قابل پرداخت</span><b id="rest">0</b></div>
+<div class="wd" id="wtot"></div>
+<div class="wd" id="wrest"></div>
+<div class="pm" id="pm"></div>
+</div>
+<div class="acts">
+<button type="button" id="bcopy">📋 کپی نتیجه</button>
+<button type="button" id="bsave">💾 ذخیره</button>
+<button type="button" id="bprint">🖨 چاپ رسید</button>
+</div>
+
+<button id="reset" type="button">پاک کردن همه</button>
+</div>
+
+<div id="p3" hidden>
+<div class="card" id="hist"></div>
+<button id="clr" type="button">پاک کردن همه سوابق</button>
+</div>
+
+<div id="p2" hidden>
+<div class="card">
+<p class="hint">نرخ مسیری که می‌دانیم را با کیلومترش وارد کنید، بعد کیلومتر مسیر جدید را بزنید.</p>
+<label for="rk">نرخ مسیر معلوم</label>
+<div class="f"><input id="rk" inputmode="decimal" placeholder="0"><span>تومان</span></div>
+
+<label for="kk">کیلومتر مسیر معلوم</label>
+<div class="f"><input id="kk" inputmode="decimal" placeholder="0"><span>کیلومتر</span></div>
+
+<label for="kn">کیلومتر مسیر جدید</label>
+<div class="f"><input id="kn" inputmode="decimal" placeholder="0"><span>کیلومتر</span></div>
+</div>
+
+<div class="card">
+<div class="row total"><span>نرخ مسیر جدید</span><b id="rn">0</b></div>
+<div class="row"><span>نرخ هر کیلومتر <small>(مسیر معلوم)</small></span><b id="rpk">0</b></div>
+</div>
+<button id="reset2" type="button">پاک کردن همه</button>
+</div>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var ids=['meta','ton','rate','tip','tr','pct'];var last=null;
+function num(s){
+  s=String(s||'').replace(/[۰-۹]/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)})
+   .replace(/[٠-٩]/g,function(d){return '٠١٢٣٤٥٦٧٨٩'.indexOf(d)})
+   .replace(/[٬,،\s]/g,'').replace(/٫/g,'.');
+  var n=parseFloat(s);return isNaN(n)?0:n;
+}
+function fmt(n){return Math.round(n).toLocaleString('en-US')+' تومان'}
+function calc(){
+  var t=num($('ton').value),r=num($('rate').value),tip=num($('tip').value),p=num($('pct').value);
+  if(p>100)p=100;
+  var tr=num($('tr').value);
+  var freight=($('unit').value==='ton'?t/1000:t)*r,total=freight+tip+tr;
+  var baseAmt=$('base').value==='total'?total:freight;
+  var paid=baseAmt*p/100,rest=total-paid;
+  $('freight').textContent=fmt(freight);
+  $('tipo').textContent=fmt(tip);
+  $('total').textContent=fmt(total);
+  $('paid').textContent=fmt(paid);
+  $('rest').textContent=fmt(rest);
+  $('tro').textContent=fmt(tr);
+  $('wtot').textContent='جمع کل به حروف: '+words(total)+' تومان';
+  $('wrest').textContent='باقی‌مانده به حروف: '+words(rest)+' تومان';
+  last={meta:$('meta').value.trim(),w:$('ton').value,r:$('rate').value,u:$('unit').value==='ton'?'هر تن':'هر کیلوگرم',freight:freight,tip:tip,tr:tr,total:total,p:p,paid:paid,rest:rest};
+  $('pl').textContent=p?'('+p+'٪)':'';
+}
+ids.forEach(function(i){$(i).addEventListener('input',calc)});
+$('base').addEventListener('change',calc);
+$('unit').addEventListener('change',calc);
+$('reset').addEventListener('click',function(){ids.forEach(function(i){$(i).value=''});calc()});
+function group(el){
+  var pos=el.selectionStart;
+  var s=el.value.replace(/[۰-۹]/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)})
+   .replace(/[٠-٩]/g,function(d){return '٠١٢٣٤٥٦٧٨٩'.indexOf(d)}).replace(/٫/g,'.');
+  var before=s.slice(0,pos).replace(/[^0-9.]/g,'').length;
+  s=s.replace(/[^0-9.]/g,'');
+  var hasDot=s.indexOf('.')>-1,parts=s.split('.'),ip=parts.shift(),dec=parts.join('');
+  ip=ip.replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  var out=ip+(hasDot?'.'+dec:'');
+  el.value=out;
+  var c=0,cnt=0;
+  while(c<out.length&&cnt<before){if(/[0-9.]/.test(out.charAt(c)))cnt++;c++}
+  try{el.setSelectionRange(c,c)}catch(e){}
+}
+['ton','rate','tip','tr','rk','kk','kn'].forEach(function(i){$(i).addEventListener('input',function(){group(this)})});
+
+calc();
+
+var O=['','یک','دو','سه','چهار','پنج','شش','هفت','هشت','نه'],T=['ده','یازده','دوازده','سیزده','چهارده','پانزده','شانزده','هفده','هجده','نوزده'],D=['','','بیست','سی','چهل','پنجاه','شصت','هفتاد','هشتاد','نود'],H=['','صد','دویست','سیصد','چهارصد','پانصد','ششصد','هفتصد','هشتصد','نهصد'],S=['','هزار','میلیون','میلیارد','تریلیون'];
+function w3(n){var p=[],h=Math.floor(n/100),r=n%100;if(h)p.push(H[h]);if(r>=10&&r<20)p.push(T[r-10]);else{var d=Math.floor(r/10),o=r%10;if(d>=2)p.push(D[d]);if(o)p.push(O[o])}return p.join(' و ')}
+function words(n){n=Math.round(n);if(!n)return 'صفر';var neg=n<0;n=Math.abs(n);var g=[],i=0;while(n>0&&i<S.length){var x=n%1000;if(x)g.unshift(w3(x)+(S[i]?' '+S[i]:''));n=Math.floor(n/1000);i++}return (neg?'منفی ':'')+g.join(' و ')}
+function summary(l){if(!l)return '';var s=['کرایه تانکر سوخت'];if(l.meta)s.push(l.meta);s.push('وزن: '+l.w+' کیلوگرم','نرخ: '+l.r+' تومان ('+l.u+')','کرایه: '+fmt(l.freight));if(l.tip)s.push('انعام: '+fmt(l.tip));if(l.tr)s.push('ترانشیپ: '+fmt(l.tr));s.push('جمع کل: '+fmt(l.total)+' ('+words(l.total)+' تومان)');if(l.p)s.push('پرداختی ('+l.p+'٪): '+fmt(l.paid));s.push('باقی‌مانده: '+fmt(l.rest));return s.join('\n')}
+function copyTxt(t,btn){var old=btn?btn.textContent:'';function ok(){if(btn){btn.textContent='کپی شد ✓';setTimeout(function(){btn.textContent=old},1500)}}function fb(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}document.body.removeChild(a);ok()}try{navigator.clipboard.writeText(t).then(ok,fb)}catch(e){fb()}}
+function loadH(){try{return JSON.parse(localStorage.getItem('tk_hist')||'[]')}catch(e){return[]}}
+function saveH(a){try{localStorage.setItem('tk_hist',JSON.stringify(a))}catch(e){}}
+function renderH(){var a=loadH(),box=$('hist');box.textContent='';if(!a.length){box.textContent='هنوز محاسبه‌ای ذخیره نشده.';return}a.forEach(function(it,i){var d=document.createElement('div');d.className='hi';var h=document.createElement('div');h.className='hh';h.textContent=(it.meta||'بدون توضیح')+' — '+it.d;var b=document.createElement('div');b.className='hb';b.textContent='جمع کل: '+fmt(it.total)+' | باقی‌مانده: '+fmt(it.rest);var x=document.createElement('div');x.className='hx';var c=document.createElement('button');c.type='button';c.textContent='کپی';c.onclick=function(){copyTxt(it.txt,c)};var del=document.createElement('button');del.type='button';del.textContent='حذف';del.onclick=function(){var z=loadH();z.splice(i,1);saveH(z);renderH()};x.appendChild(c);x.appendChild(del);d.appendChild(h);d.appendChild(b);d.appendChild(x);box.appendChild(d)})}
+$('bcopy').addEventListener('click',function(){copyTxt(summary(last),this)});
+$('bsave').addEventListener('click',function(){if(!last||!last.total)return;var a=loadH();a.unshift({d:new Date().toLocaleDateString('fa-IR'),meta:last.meta,total:last.total,rest:last.rest,txt:summary(last)});saveH(a.slice(0,200));var b=this,o=b.textContent;b.textContent='ذخیره شد ✓';setTimeout(function(){b.textContent=o},1500);renderH()});
+$('bprint').addEventListener('click',function(){$('pm').textContent=(last&&last.meta?last.meta+' — ':'')+'تاریخ: '+new Date().toLocaleDateString('fa-IR');window.print()});
+$('clr').addEventListener('click',function(){saveH([]);renderH()});
+renderH();
+
+function calc2(){
+  var r=num($('rk').value),k=num($('kk').value),n=num($('kn').value);
+  var per=k>0?r/k:0;
+  $('rn').textContent=fmt(per*n);
+  $('rpk').textContent=fmt(per);
+}
+['rk','kk','kn'].forEach(function(i){$(i).addEventListener('input',calc2)});
+$('reset2').addEventListener('click',function(){['rk','kk','kn'].forEach(function(i){$(i).value=''});calc2()});
+function tab(n){
+  $('p1').hidden=n!==1;$('p2').hidden=n!==2;$('p3').hidden=n!==3;if(n===3)renderH();
+  $('t1').className=n===1?'on':'';$('t2').className=n===2?'on':'';$('t3').className=n===3?'on':'';
+}
+$('t1').addEventListener('click',function(){tab(1)});
+$('t2').addEventListener('click',function(){tab(2)});
+$('t3').addEventListener('click',function(){tab(3)});
+calc2();
+})();
+</script>
+</body>
+</html>
